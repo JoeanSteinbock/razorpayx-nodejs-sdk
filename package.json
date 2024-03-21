@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "doc": "./node_modules/.bin/typedoc --entryPointStrategy expand ./src --out docs .",
-    "release": "semantic-release"
+    "release": "npm version patch && npm publish"
   },
   "author": "Sonu Bamniya",
   "license": "MIT",
