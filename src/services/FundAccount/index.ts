@@ -8,6 +8,26 @@ export interface FundAccount extends Omit<GenericFields, "entity"> {
   account_type: "vpa" | "bank_account";
 }
 
+export interface FundAccountWithContact extends Omit<GenericFields, "entity"> {
+  entity: "fund_account";
+  contact: Contact;
+  contact_id?: never; // 使用 never 类型确保 fund_account_id 不在此情况中提供
+  account_type: "vpa" | "bank_account";
+}
+
+export interface FundAccountBankWithContact extends FundAccountWithContact {
+  bank_account: {
+    name: string;
+    ifsc: string;
+    account_number: string;
+  };
+}
+export interface FundAccountVPAWithContact extends FundAccountWithContact {
+  vpa: {
+    address: string;
+  };
+}
+
 export interface FundAccountBank extends FundAccount {
   bank_account: {
     name: string;

@@ -1,10 +1,13 @@
-import { FundAccount } from "services/FundAccount";
+import {
+  FundAccountBankWithContact,
+  FundAccountVPAWithContact,
+} from "services/FundAccount";
 import { GenericFields, Pageable, Response } from "../../types/generic";
 import RestClient from "../../utils/RestClient";
 
 // 定义两个接口，分别表示只有 fund_account 和只有 fund_account_id 的情况
 interface WithFundAccount {
-  fund_account: FundAccount["contact_id"] | FundAccount;
+  fund_account: FundAccountBankWithContact | FundAccountVPAWithContact;
   fund_account_id?: never; // 使用 never 类型确保 fund_account_id 不在此情况中提供
 }
 
@@ -77,7 +80,7 @@ class RPXPayout {
     > &
       (
         | {
-            fund_account: FundAccount["contact_id"] | FundAccount;
+            fund_account: FundAccountBankWithContact | FundAccountVPAWithContact;
             fund_account_id?: never;
           }
         | { fund_account_id: string; fund_account?: never }
