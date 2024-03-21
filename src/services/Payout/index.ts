@@ -1,11 +1,24 @@
+import { FundAccount } from "services/FundAccount";
 import { GenericFields, Pageable, Response } from "../../types/generic";
 import RestClient from "../../utils/RestClient";
-import { Contact } from "../Contact";
 
-export interface Payout extends Omit<GenericFields, "active"> {
+// 定义两个接口，分别表示只有 fund_account 和只有 fund_account_id 的情况
+interface WithFundAccount {
+  fund_account: FundAccount["contact_id"] | FundAccount;
+  fund_account_id?: never; // 使用 never 类型确保 fund_account_id 不在此情况中提供
+}
+
+interface WithFundAccountId {
+  fund_account_id: string;
+  fund_account?: never; // 使用 never 类型确保 fund_account 不在此情况中提供
+}
+
+// 使用联合类型结合 BasePayout 和上述两种情况，确保至少提供其中一个字段
+export type Payout = BasePayout & (WithFundAccount | WithFundAccountId);
+
+interface BasePayout extends Omit<GenericFields, "active"> {
   entity: "payout";
   account_number?: string;
-  fund_account_id: Contact["id"];
   /** Amount in paise */
   amount: number;
   currency: "INR";
@@ -54,7 +67,6 @@ class RPXPayout {
     payoutInfo: Pick<
       Payout,
       | "account_number"
-      | "fund_account_id"
       | "amount"
       | "currency"
       | "mode"
@@ -62,7 +74,14 @@ class RPXPayout {
       | "reference_id"
       | "narration"
       | "notes"
-    > & { queue_if_low_balance?: boolean }
+    > &
+      (
+        | {
+            fund_account: FundAccount["contact_id"] | FundAccount;
+            fund_account_id?: never;
+          }
+        | { fund_account_id: string; fund_account?: never }
+      ) & { queue_if_low_balance?: boolean }
   ): Promise<Payout> {
     return this.client.load<Payout>("/payouts", "POST", payoutInfo);
   }
