@@ -4,15 +4,16 @@ import { Contact } from "../Contact";
 
 export interface FundAccount extends Omit<GenericFields, "entity"> {
   entity: "fund_account";
-  contact_id: Contact["id"];
+  contact_id?: Contact["id"];
   account_type: "vpa" | "bank_account";
 }
 
-export interface FundAccountWithContact extends Omit<GenericFields, "entity"> {
-  entity: "fund_account";
-  contact: Contact;
+export interface FundAccountWithContact extends Omit<FundAccount, "entity" | "id" | "created_at" | "active"> {
+  contact: Omit<
+    Contact,
+    "id" | "entity" | "batch_id" | "created_at" | "active"
+  >;
   contact_id?: never; // 使用 never 类型确保 fund_account_id 不在此情况中提供
-  account_type: "vpa" | "bank_account";
 }
 
 export interface FundAccountBankWithContact extends FundAccountWithContact {

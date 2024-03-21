@@ -1,4 +1,5 @@
 import {
+  FundAccount,
   FundAccountBankWithContact,
   FundAccountVPAWithContact,
 } from "services/FundAccount";
@@ -80,7 +81,8 @@ class RPXPayout {
     > &
       (
         | {
-            fund_account: FundAccountBankWithContact | FundAccountVPAWithContact;
+            fund_account: Pick<FundAccount, "account_type"> &
+              (FundAccountBankWithContact | FundAccountVPAWithContact);
             fund_account_id?: never;
           }
         | { fund_account_id: string; fund_account?: never }
