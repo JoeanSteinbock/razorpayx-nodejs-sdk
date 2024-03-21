@@ -2,7 +2,7 @@ import {
   FundAccount,
   FundAccountBankWithContact,
   FundAccountVPAWithContact,
-} from "services/FundAccount";
+} from "../FundAccount";
 import { GenericFields, Pageable, Response } from "../../types/generic";
 import RestClient from "../../utils/RestClient";
 
